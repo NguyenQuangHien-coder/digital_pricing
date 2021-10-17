@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_variant_easy_edit_view" model="ir.ui.view">
+        <field name="name">product.product.view.form.easy</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='barcode']" position='after'>
+                <!-- <div class="oe_title">
+                    <h1>
+                        <field name="name_seq" readonly="1"/>
+                    </h1>
+                </div> -->
+                <!-- <field name="name_seq"/> -->
+            </xpath>            
+        </field>
+    </record>
+
+    <!-- INHERIT VARIANTS PRODUCTS FORM VIEW -->
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.product.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">         
+            <xpath expr="//group[@name='group_general']" position="inside">           
+                <!-- <label for="digital_package_id"/>
+                <field name="digital_package_id" widget="selection" nolabel="1"/> -->
+                <field name="is_server" invisible="1"/>   
+                <!-- <field name="digital_package_id"/>    -->
+                <label for="digital_package_value_id" attrs="{'invisible':[('is_server','!=',True)]}"/>
+                <field name="digital_package_value_id" widget="selection" nolabel="1" domain="[('is_server','=', True)]" attrs="{'invisible':[('is_server','!=',True)]}" />      
+                
+                 
+            </xpath>
+        </field>
+    </record>
+
+    
+    <!-- <record id="product_product_tree_view" model="ir.ui.view">
+        <field name="name">product.product.tree</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">   
+                <field name="is_server" invisible="1"/>           
+                <field name="digital_package_value_id" widget="selection" readonly="0" domain="[('is_server','=', True)]" attrs="{'invisible':[('is_server','!=',True)]}"/>      
+            </xpath>
+            
+        </field>
+    </record> -->
+
+    <!-- INHERIT VARIANTS PRODUCTS TREE VIEW -->
+    <record id="product_product_tree_view" model="ir.ui.view">
+        <field name="name">product.product.tree</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position='before'>
+                <field name="sequence" widget="handle"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">   
+                <field name="is_server" invisible="1"/>           
+                <!-- <field name="digital_package_id"/>            -->
+                <!-- is_server of domain(product.digitalpackage.value) is different from is_server of attrs(product.product) -->
+                <field name="digital_package_value_id" readonly="0" domain="[('is_server','=', True)]" attrs="{'invisible':[('is_server','!=',True)]}"/>      
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ADD NEW CHECKBOX IN PRODUCT CATEGORY -->
+    <record id="product_category_form_view" model="ir.ui.view">
+        <field name="name">product.category.form</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='first']" position='inside'>
+                <field name="is_digital_category"/>
+                <field name="is_checkout_section"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="payment" name="Payment" inherit_id="website_sale.payment">
+        <xpath expr="//h3[hasclass('mb24')]" position="before">      
+            <!-- <t t-if="website_sale_order.website_order_line.product_id.product_tmpl_id.is_value_package and website_sale_order.website_order_line.product_id.product_tmpl_id.is_digital_product"> --> 
+            <t t-esc="test"></t>
+            <t t-if="is_server or is_digital">    
+                <h3 class="mb24">Payment Package<span class="h5"> (Only for Server and Digital Product)</span></h3>
+                <table id="tableSelectPaymentPackage" class="table table-sm table-condensed table-hover mt16">
+                    <thead>
+                    
+                    </thead>
+                    <tbody> 
+                        <tr>
+                            <td>
+                                <div class="radio pl-3">
+                                    <label class="pt-2 d-flex align-items-center" style="height: 70px"><input type="radio" id='' name="optradio" value="fullpayment"/></label>
+                                </div>
+                            </td>   
+                            <td>
+                                <div class="radiotext">                              
+                                    <label class="pt-2" for=''>FULLYPAYMENT + <span t-esc="trial_days"/> DAYS</label>
+                                    <br />
+                                    <span><small class="text-secondary">(Fully payment will get + 30 days bonus)</small></span>
+                                </div>
+                            </td>                     
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="radio pl-3">
+                                    <label class="pt-2"><input type="radio" id='' name="optradio" value="trialpayment"/></label>
+                                </div>
+                            </td>     
+                            <td>
+                                <div class="radiotext">
+                                    <label class="pt-2" for=''>PAY <span t-esc="first_invoice_percent"/>% AND TRIAL IN <span t-esc="trial_days"/> DAYS</label>
+                                </div>
+                            </td>                   
+                        </tr>
+                    </tbody>
+                </table>    
+            </t>
+        </xpath>
+    </template>
+
+    <!-- INHERIT FROM PAYMENT -->
+    <!-- IF IS TRIAL == TRUE -> RECALCULATION PRICE OF BILLS-->
+    <template id="payment_tokens_list" name="Payment Tokens list" inherit_id="payment.payment_tokens_list">
+        <xpath expr="//form" position="inside">
+            <input type="hidden" name="is_trial" />
+        </xpath>
+    </template>
+
+    <!-- SHOW PRICE IN /shop/payment -->
+    <template id="total" inherit_id="website_sale.total">
+        <xpath expr="//div[@id='cart_total']" position="replace">
+            <div id="cart_total" t-att-class="extra_class or ''" t-if="website_sale_order and website_sale_order.website_order_line">
+                <table class="table">
+                      <tr id="empty">
+                          <t t-if='not no_rowspan'><td rowspan="10" class="border-0"/></t>
+                          <td class="col-md-2 col-3 border-0"></td>
+                          <td class="col-md-2 col-3 border-0" ></td>
+                      </tr>
+                      <tr id="order_total_untaxed" class="border-bottom">
+                          <td class="text-right border-0">Subtotal:</td>
+                          <td class="text-xl-right border-0" >
+                              <span t-field="website_sale_order.amount_untaxed" class="monetary_field fullpayment" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                              <span t-field="website_sale_order.amount_untaxed_first_invoice" class="monetary_field trialpayment" style="white-space: nowrap; display:none" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                          </td>
+                      </tr>
+                      <tr id="order_total_taxes">
+                          <td class="text-right border-0">Taxes:</td>
+                          <td class="text-xl-right border-0">
+                              <span t-field="website_sale_order.amount_tax" class="monetary_field fullpayment" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
+                            <span t-field="website_sale_order.amount_tax_first_invoice" class="monetary_field trialpayment" style="white-space: nowrap; display:none" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />                            
+                          </td>
+                      </tr>
+                      <tr id="order_total">
+                          <td class="text-right"><strong>Total:</strong></td>
+                          <td class="text-xl-right">
+                              <strong t-field="website_sale_order.amount_total" class="monetary_field fullpayment"
+                                  t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
+                            <strong t-field="website_sale_order.amount_total_first_invoice" class="monetary_field trialpayment"
+                                  t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}' style="display:none"/>
+                          </td>
+                      </tr>
+                </table>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- SHOW LIST PRODUCT OF ORDER LINE IN /shop/payment -->
+    <template id="cart_summary" name="Cart right column" inherit_id="website_sale.cart_summary">
+        <xpath expr="//table[@id='cart_products']" position="replace">     
+            <table class="table table-sm" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
+                <thead>
+                    <tr>
+                        <th class="border-top-0 td-img">Product</th>
+                        <th class="border-top-0"></th>
+                        <th class="border-top-0 td-qty">Quantity</th>
+                        <th class="border-top-0 text-center td-price">Price</th>
+                    </tr>
+                    
+                </thead>
+                <tbody>
+                   
+                    <!-- NORMAL PRODUCT -->
+                    <tr style="height:30px; background-color:#27a664" t-if="is_normal">
+
+                        <th colspan="4"><span t-esc="section_label" class="text-white"></span></th>                     
+                    </tr>
+                    <tr t-foreach="website_sale_order.website_order_line" t-as="line">
+                        <!-- SHOW PRODUCT'S IMAGE -->
+                        <td class='' colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
+                        <td class='td-img text-center' t-if="not line.product_id.product_tmpl_id.categ_id.is_digital_category and not line.product_id.product_tmpl_id.is_value_package and not line.product_id.product_tmpl_id.categ_id.is_checkout_section">
+                            <span t-field="line.product_id.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}" class="custom-image-size"/>
+                        </td>
+                        <!-- SHOW PRODUCT'S NAME -->
+                        <td class='td-product_name' t-if="not line.product_id.product_tmpl_id.categ_id.is_digital_category and not line.product_id.product_tmpl_id.is_value_package and not line.product_id.product_tmpl_id.categ_id.is_checkout_section">
+                            <div>
+                                <strong t-field="line.name_short" style="font-size: 12px"/>
+                            </div>
+                        </td>
+                        <!-- SHOW PRODUCT'S QTY -->
+                        <td class='td-qty' t-if="not line.product_id.product_tmpl_id.categ_id.is_digital_category and not line.product_id.product_tmpl_id.is_value_package and not line.product_id.product_tmpl_id.categ_id.is_checkout_section">
+                            <div t-esc="line.product_uom_qty" />
+                        </td>
+                        <!-- SHOW PRODUCT''S PRICE' -->
+                        <td class="text-center td-price" t-if="not line.product_id.product_tmpl_id.categ_id.is_digital_category and not line.product_id.product_tmpl_id.is_value_package and not line.product_id.product_tmpl_id.categ_id.is_checkout_section">
+                            <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" groups="account.group_show_line_subtotals_tax_excluded" />
+                            <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" groups="account.group_show_line_subtotals_tax_included" />
+                        </td>
+                    </tr>
+         
+                    <!-- PRODUCT HAVE SECTION LABEL -->      
+                    <tr t-foreach="data" t-as="d" t-key="d.get('category_id')" style="background-color:#27a664">    
+                        <t t-if="len(d.get('products')) > 0">
+                            <th colspan="4"><div t-esc="d.get('category_name')" class="text-white"/></th>  
+                            <tr t-foreach="d.get('products')" t-as="line" t-key="line.get('id')">
+                                <!-- SHOW PRODUCT'S IMAGE -->
+                                <t t-if="line.get('image')">
+                                    <td class='td-img text-center'>                                    
+                                        <span t-esc="line.get('image')" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}" class="custom-image-size"/>                                 
+                                    </td>
+                                </t>
+                                <t t-else="">
+                                    <td class='td-img text-center'>                                    
+                                        
+                                    </td>
+                                </t>
+                                <!-- SHOW PRODUCT'S NAME -->
+                                <td class='td-product_name' >
+                                    <div>
+                                        <strong t-esc="line.get('name')" style="font-size: 12px"></strong>
+                                    </div>
+                                </td>
+                                <!-- SHOW PRODUCT'S QTY -->
+                                <td class='td-qty' >
+                                    <div t-esc="line.get('qty')" />
+                                </td>
+                                <!-- SHOW PRODUCT''S PRICE' -->
+                                <td class="text-center td-price">                                                                              
+                                    <span t-esc="line.get('price_reduce_taxexcl')" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                    <span t-esc="line.get('price_reduce_taxinc')" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" groups="account.group_show_line_subtotals_tax_included"/>                                                 
+                                </td>
+                            </tr>
+                        </t>
+                    </tr>                            
+                </tbody>
+            </table>
+        </xpath>
+    </template>
+
+</odoo>

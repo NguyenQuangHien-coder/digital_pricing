@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="pricingpage" model="ir.ui.view">
+            <field name="name">Pricing Page</field>
+            <field name="type">qweb</field>
+            <field name="key">license_management.pricingpage</field>
+            <field name="arch" type="xml">
+                <t t-call="website.layout"></t>
+            </field>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="pricing_page" model="website.page">
+            <field name="url">/pricing</field>
+            <field name="is_published">True</field>
+            <field name="view_id" ref="license_management.pricingpage"/>
+            <field name="cache_key_expr">('cached' if not request.params else None,)</field>
+            <field name="track">True</field>
+        </record>
+        <record id="pricing_menu" model="website.menu">
+            <field name="name">Pricing</field>
+            <field name="url">/pricing</field>
+            <field name="page_id" ref="license_management.pricing_page"/>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">60</field>
+        </record>      
+    </data>
+</odoo>

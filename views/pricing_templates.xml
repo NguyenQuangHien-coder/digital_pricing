@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+  <template id="pricing" name="Pricing" inherit_id="license_management.pricingpage">
+    <!-- INHERIT FROM pricing_data.xml -->
+    <xpath expr="//t[@t-call='website.layout']" position="inside">
+      <!-- <h1>This contact us title has been changed by an imported module</h1> -->
+      
+      <div id="wrap" class="pricing">
+        
+        <section class="" style="background-color: #27a664;">
+          <div class="text-center pt32 pb32">
+            <h1 class="display-4 text-white font-weight-bold">Vua He Thong Pricing</h1>
+            <!-- <h5 class="mt0 mb-4 text-white">Even pricing is easier with <b>Odoo</b>.</h5> -->
+          </div>
+        </section>
+     
+        <section class="container position-relative">
+            <div class="row">
+              <div class="col-12 col-md-8 col-lg-9">
+                
+                
+
+                <!-- PRODUCT BY TABLE -->
+                <table id="tableSelect" class="table table-sm table-condensed  table-hover mt16" style="box-shadow: 40px 40px 160px 0 rgb(0 0 0 / 8%), -8px 8px 15px 0 rgb(120 120 120 / 4%), 3px 3px 30px 0 rgb(0 0 0 / 4%);">
+                  <thead>
+                      <tr style="background-color: #27a664;">
+                        <th class="d-none"></th>
+                        <th class="text-white" style="padding-left: 13px">Select</th>
+                        <th class="text-white">Memory</th>
+                        <th class="text-white">CPUs</th>
+                        <th class="text-white">Disks</th>                       
+                        <th class="text-white">Price</th>                       
+                      </tr>
+                  </thead>
+                  <tbody> 
+                    <t t-foreach="data" t-as="data" t-key="data.get('digital_package_value_id')">
+                      <tr t-if="len(data.get('products')) > 0" style="background-color: #3773c5"> 
+                        <td colspan="5">
+                          <span class="pl-2 text-light">&#x2630;</span>
+                          <label t-esc="data.get('digital_package_value_name')" class="mt-1 mb-1 font-weight-bold text-light"/>
+                        </td>
+                      </tr>
+                      <t t-foreach="data.get('products')" t-as="product" t-key="product.get('product_id')">
+                        <tr>
+                            <!-- GET PRODUCT_ID TO CART BY JS-->
+                            <td class="d-none"><input t-att-value="product.get('product_id')"/></td>
+                            <td>
+                              <div class="radio pl-2">
+                                  <label class="mt-1 mb-1"><input type="radio" id='' name="optradio" t-att-value="product.get('price')" /></label>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="radiotext">
+                                  <label for='' t-esc="product.get('RAM')" class="mt-1 mb-1"></label>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="radiotext">
+                                  <label for='' t-esc="product.get('CPU')" class="mt-1 mb-1"></label>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="radiotext">
+                                  <label for='' t-esc="product.get('DISK')" class="mt-1 mb-1"></label>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="radiotext">                      
+                                  <label for='' t-esc="product.get('price')" t-options='{"widget": "monetary", "display_currency": website.currency_id}' class="mt-1 mb-1"></label>
+                              </div>
+                            </td>
+                        </tr> 
+                      </t>    
+                    </t>
+                                   
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-12 col-md-4 col-lg-3 mt16">
+                <div class="card border pricing_cart_box" style="box-shadow: 40px 40px 160px 0 rgb(0 0 0 / 8%), -8px 8px 15px 0 rgb(120 120 120 / 4%), 3px 3px 30px 0 rgb(0 0 0 / 4%);" data-aos="zoom-in">
+                  <div class="card-header border-bottom bg-200 pt-0 small">
+                    <ul class="nav nav-tabs card-header-tabs justify-content-center">
+                      <li class="nav-item">
+                        <!-- <a data-toggle="tab" href="#cart" class=" px-3 active border-top-0 rounded-0 fw_bold">Cart</a> -->
+                        <h3>Cart</h3>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="card-body">
+                    <div class="tab-content mb-3 mb-lg-0">
+                      <div class="tab-pane active show" id="cart">
+                        <table class="table mb-1">
+                          <tbody>
+                            <tr class="active" style="font-size:12px">
+                              <td><b>Total</b> / <b t-esc="uom_id.name" /></td>
+                              <td>
+                                <!-- <b class="openerp_enterprise_pricing_price_yearly">$0.00</b> -->
+                                <output type="number" class="font-weight-bold" ></output>                        
+                                <span t-field="website.currency_id.symbol" />      
+                              </td>
+                            </tr>
+                            <tr  style="font-size:12px">
+                              <td><b>Trial Payment</b></td>
+                              <td>
+                                <span t-esc="first_invoice_percent" class="font-weight-bold"/>% of bill
+                              </td>
+                            </tr>
+                            <tr  style="font-size:12px">
+                              <td><b>Free Trial days</b></td>
+                              <td>
+                                <span t-esc="trial_days" class="font-weight-bold"/> days
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <!-- <a href="/shop/cart/try-demo" class="btn btn-success btn-block btn-lg pricing_buy_now" style="background-color: #875a7b;">TRY NOW
+                      <span style="display:block; font-size:15px">30 days Free trial</span>
+                    </a> -->
+                    <form action="/shop/cart/update" method="POST">
+                      <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                      <input type="hidden" id="license_management_product_id" name="product_id"/>
+                      <input type="hidden" class="product_template_id" name="product_template_id"/>
+                      <!-- <input type="submit" class="btn btn-success btn-block btn-lg pricing_buy_now mt-2" value="BUY NOW"/> -->
+                      <input type="submit" class="btn btn-block btn-lg pricing_buy_now text-white" style="background-color: #27a664;" value="TRY NOW"/>                  
+                        <!-- <h5 class="text-center mt-2" style="color: #913e7a">(<span t-esc="first_invoice_percent"/> percent payment and <span t-esc="trial_days"/> days trial)</h5>   -->  
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </section>
+      </div>
+    </xpath>
+  </template>
+
+  <!-- <template id="pricing_cart" name="Pricing Cart">
+    <table class="table mb-1">
+      <tbody>
+        
+        <t t-foreach="order.order_line" t-as="line">
+          <tr t-if="not line.product_id.is_package_product">
+            <td>
+             <span t-field="line.product_id.product_tmpl_id.name"></span>
+            </td>
+            <td>
+              <b><t t-esc="to_currency.symbol"/> <t t-esc="line.price_subtotal"/></b>
+              <span t-field="to_currency.name"></span>
+            </td>
+          </tr>
+        </t>
+
+
+        <tr>
+          <td><t t-esc="total_apps"/> <b><t t-if="total_apps > 1"> Apps</t><t t-if="total_apps == 1"> App</t></b></td>
+          <td><b><t t-esc="to_currency.symbol"/> <t t-esc="total_apps_amount"/></b>
+              <span t-field="to_currency.name"></span>
+          </td>
+        </tr>
+        <tr>
+          <td><b>Total</b> / month</td>
+          <td>
+            <b><t t-esc="to_currency.symbol"/> <t t-esc="order.amount_total"/></b>
+            <span t-field="to_currency.name"></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </template> -->
+</data>
+</odoo>

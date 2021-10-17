@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="subscription" name="Subscription" inherit_id='sale_subscription.subscription'>
+        <xpath expr="//table/tbody/tr[3]" position="after">
+            <tr t-if="is_show_carousel">
+                <th class="text-right pb-0">Free trial:</th>
+                <td class="w-100 pb-0 font-weight-bold"><span t-esc="trial_days" /> days</td>
+            </tr>
+        </xpath>
+        <xpath expr="//table/tbody/tr[7]" position="after">
+            <tr t-if="is_show_carousel">
+                <th class="text-right pb-0">License Key:</th>
+                <td class="w-100 pb-0 font-weight-bold"><span t-esc="key" /></td>
+            </tr>
+        </xpath>
+        <xpath expr="//h3[hasclass('mb-1')]" position="after">  
+            <div t-if="is_show_carousel" class="License-Management__Pricing-Carousel mb-5">
+                <!-- <div class="PriceGrids-slider">
+                    <t t-foreach="products" t-as="product" t-key="product.get('product_id')">
+                        <div class="PriceGrid-container">
+                            <div class="PriceGrid">
+                                <div class="text-center font-weight-bold text-primary">
+                                    <div class="d-flex justify-content-center PriceGrid-price">
+                                        <span class="PriceGrid-currency">$</span>
+                                        <span><h4 class="PriceGrid-num" t-esc="product.get('price')"></h4></span>
+                                        <span class="PriceGrid-time">/mo</span>
+                                    </div>                                   
+                                </div>
+                                <hr class="m-0"/>
+                                <ul class="text-success PriceGrid-list">
+                                    <li style="font-size: 12px"><strong class="text-success" t-esc="product.get('RAM')"/> Memory</li>
+                                    <li style="font-size: 12px"><strong class="text-success" t-esc="product.get('CPU')"/> Processor</li>
+                                    <li style="font-size: 12px"><strong class="text-success" t-esc="product.get('DISK')"/> SSD Disk</li>
+                                    <li style="font-size: 12px"><strong class="text-success">1TB</strong> Transfer</li>
+                                </ul>
+                                <div class="d-flex justify-content-center PriceGrid-button">
+                                    <a role="button" t-att-data-package-id="product.get('product_id')" data-toggle="modal" data-target="#wc-modal-upgrade" href="#" class="open-UpgradePackage btn btn-sm btn-primary">Upgrade</a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div> -->
+                
+               
+               <!-- RADIO SELECTION  -->
+               <div class="row mt-3 pl-2 pr-2">
+                   <div class="text-left" style="width:100%">
+                        <tr>             
+                            <label class="ml-2">
+                                <p style="color: #5b6987; font-weight: bold">Package Options:</p>
+                            </label>     
+                        </tr>
+                        <t t-foreach="data" t-as="data" t-key="data.get('package_id')">                  
+                            <tr id="select_digital_package" t-if="len(data.get('products')) > 0">
+                                <label class="ml-2">
+                                    <input type="radio" name="digital_package" t-att-value="data.get('package_id')" /> <span class="package_name" t-esc="data.get('package_name')"/>
+                                </label>     
+                            </tr>                 
+                        </t>
+                   </div>          
+                </div>    
+                <!-- PRODUCT -->
+                <div class="row">
+                    <div class="grid" id ="digital_package_grid" style="padding-left: 15px">         
+                        <t t-foreach="products" t-as="product" t-key="product.get('product_id')">   
+                            <!-- UPPER SERVER PACKAGE  -->
+                            <t t-if="product.get('product_id') != current_server_package">
+                                <a role="button" t-att-data-package-id="product.get('product_id')" data-toggle="modal" data-target="#wc-modal-upgrade" href="#" class="open-UpgradePackage">                  
+                                    <div class="element-item" style="margin-left: 20px; margin-bottom: 20px" t-att-value="product.get('package_id')" t-att-data-package-seq="product.get('package_seq')">                          
+                                        <!-- <div class="d-flex justify-content-left PriceGrid-price">
+                                            <h2 class="PriceGrid-num font-weight-bold" t-esc="product.get('price')" t-options='{"widget": "monetary", "display_currency": pricelist.currency_id}'/>/<span class="PriceGrid-time" t-esc="product.get('uom_id')"/>                       
+                                            <div class="tooltiptext d-flex justify-content-left p-2">
+                                                <h5 class="PriceGrid-num font-weight-bold" t-esc="product.get('price')" t-options='{"widget": "monetary", "display_currency": pricelist.currency_id}'/>/<span class="PriceGrid-time" t-esc="product.get('uom_id')"/>
+                                            </div>                                                                                                                        
+                                        </div> -->
+                                        <div class="text-center font-weight-bold">
+                                            <div class="d-flex justify-content-left PriceGrid-price">
+                                                <h2 class="PriceGrid-num font-weight-bold" t-esc="product.get('price')" t-options='{"widget": "monetary", "display_currency": website.currency_id}'/>/<span class="PriceBlock-time" t-esc="product.get('uom_id')"/>                       
+                                                <div class="tooltiptext d-flex justify-content-left p-2">
+                                                    <h5 class="PriceGrid-num font-weight-bold" t-esc="product.get('price')" t-options='{"widget": "monetary", "display_currency": website.currency_id}'/>/<span class="PriceGrid-time" t-esc="product.get('uom_id')"/>
+                                                </div>     
+                                            </div>                             
+                                        </div>       
+                                        <hr class="m-0"/>
+                                        <ul class="PriceGrid-list">
+                                            <li class="my-1"><strong t-esc="product.get('RAM')"/> Memory</li>
+                                            <li class="my-1"><strong t-esc="product.get('CPU')"/> Processor</li>
+                                            <li class="my-1"><strong t-esc="product.get('DISK')"/> SSD Disk</li>
+                                            <!-- <li class="my-1" style="font-size: 20px"><strong>1TB</strong> Transfer</li> -->
+                                        </ul>          
+                                        <div class="d-flex justify-content-left PriceGrid-button">
+                                            <a role="button" t-att-data-package-id="product.get('product_id')" data-toggle="modal" data-target="#wc-modal-upgrade" href="#" class="open-UpgradePackage ml-4">Upgrade <span>&#x27A4;</span></a>
+                                        </div>                          
+                                    </div>     
+                                </a>                                      
+                            </t>
+                            <!-- CURRENT SERVER PACKAGE -->
+                            <t t-else="">         
+                                <!-- FULL PAYMENT -->
+                                <a t-if="is_first_invoice_server_paid" role="button" class="open-UpgradePackage" >                                                                        
+                                    <div class="element-item" style="background-color: #27a664; opacity: 90%; margin-left: 20px; margin-bottom: 20px" t-att-value="product.get('package_id')" t-att-data-package-seq="product.get('package_seq')" data-aos="zoom-in">                          
+                                        <!-- <div class="d-flex justify-content-left PriceGrid-price text-light">
+                                            <h2 class="PriceGrid-num font-weight-bold" t-esc="product.get('price')" t-options='{"widget": "monetary", "display_currency": pricelist.currency_id}'/>/<span class="PriceGrid-time" t-esc="product.get('uom_id')"/>                       
+                                            <div class="tooltiptext d-flex justify-content-left p-2">
+                                                <h5 class="PriceGrid-num font-weight-bold" t-esc="product.get('price')" t-options='{"widget": "monetary", "display_currency": pricelist.currency_id}'/>/<span class="PriceGrid-time" t-esc="product.get('uom_id')"/>
+                                            </div>  
+                                        </div> -->
+                                        <div class="text-center font-weight-bold">
+                                            <div class="d-flex justify-content-left PriceGrid-price text-light">
+                                                <h2 class="PriceGrid-num font-weight-bold text-light" t-esc="product.get('price')" t-options='{"widget": "monetary", "display_currency": website.currency_id}'/>/<span class="PriceBlock-time" t-esc="product.get('uom_id')"/>                       
+                                                <div class="tooltiptext d-flex justify-content-left p-2">
+                                                    <h5 class="PriceGrid-num font-weight-bold" t-esc="product.get('price')" t-options='{"widget": "monetary", "display_currency": website.currency_id}'/>/<span class="PriceGrid-time" t-esc="product.get('uom_id')"/>
+                                                </div>     
+                                            </div>                             
+                                        </div>   
+                                        <hr class="m-0 bg-white"/>
+                                        <ul class="PriceGrid-list">
+                                            <li class="my-1 text-light"><strong t-esc="product.get('RAM')"/> Memory</li>
+                                            <li class="my-1 text-light"><strong t-esc="product.get('CPU')"/> Processor</li>
+                                            <li class="my-1 text-light"><strong t-esc="product.get('DISK')"/> SSD Disk</li>
+                                        </ul>       
+                                        <div class="d-flex justify-content-left PriceGrid-button">
+                                            <a class="open-UpgradePackage text-light badge ml-4" style="background-color: #3aadaa">Activated <span>&#10003;</span></a>                                          
+                                        </div>                                                                                 
+                                    </div>      
+                                </a>        
+                                <!-- TRIAL -->
+                                <a t-else="" role="button" class="open-UpgradePackage" data-toggle="modal" data-target="#wc-modal-activate-package">                                                                        
+                                    <div class="element-item" style="background-color: #27a664; opacity: 90%; margin-left: 20px; margin-bottom: 20px" t-att-value="product.get('package_id')" t-att-data-package-seq="product.get('package_seq')" data-aos="zoom-in">                          
+                                        <!-- <div class="d-flex justify-content-left PriceGrid-price text-light">
+                                            <h2 class="PriceGrid-num font-weight-bold" t-esc="product.get('price')" t-options='{"widget": "monetary", "display_currency": pricelist.currency_id}'/>/<span class="PriceGrid-time" t-esc="product.get('uom_id')"/>                       
+                                            <div class="tooltiptext d-flex justify-content-left p-2">
+                                                <h5 class="PriceGrid-num font-weight-bold" t-esc="product.get('price')" t-options='{"widget": "monetary", "display_currency": pricelist.currency_id}'/>/<span class="PriceGrid-time" t-esc="product.get('uom_id')"/>
+                                            </div>  
+                                        </div> -->
+                                        <div class="text-center font-weight-bold">
+                                            <div class="d-flex justify-content-left PriceGrid-price text-light">
+                                                <h2 class="PriceGrid-num font-weight-bold text-light" t-esc="product.get('price')" t-options='{"widget": "monetary", "display_currency": website.currency_id}'/>/<span class="PriceBlock-time" t-esc="product.get('uom_id')"/>                       
+                                                <div class="tooltiptext d-flex justify-content-left p-2">
+                                                    <h5 class="PriceGrid-num font-weight-bold" t-esc="product.get('price')" t-options='{"widget": "monetary", "display_currency": website.currency_id}'/>/<span class="PriceGrid-time" t-esc="product.get('uom_id')"/>
+                                                </div>     
+                                            </div>                             
+                                        </div>   
+                                        <hr class="m-0 bg-white"/>
+                                        <ul class="PriceGrid-list">
+                                            <li class="my-1 text-light"><strong t-esc="product.get('RAM')"/> Memory</li>
+                                            <li class="my-1 text-light"><strong t-esc="product.get('CPU')"/> Processor</li>
+                                            <li class="my-1 text-light"><strong t-esc="product.get('DISK')"/> SSD Disk</li>
+                                        </ul>       
+                                        <div class="d-flex justify-content-left PriceGrid-button">                    
+                                            <a class="open-UpgradePackage text-dark badge badge-warning ml-4" >Trial <span t-esc="trial_days" /> days <span>&#128337;</span></a>
+                                        </div>                                                                                
+                                    </div>      
+                                </a>                                                                                                          
+                            </t>
+                        </t>
+                    </div>    
+                </div>  
+                
+            </div>  
+            <!-- UPGRADE-MODAL -->
+            <div role="dialog" class="modal fade" id="wc-modal-upgrade" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <header class="modal-header">
+                            <h4 class="modal-title">Upgrade</h4>
+                        </header>
+                        <form method="post" t-attf-action="/my/subscription/#{account.id}/upgrade/?uuid=#{account.uuid}">
+                            <input class="d-none" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input class="d-none" name="package_id"/>
+                            <main class="modal-body">
+                                <p t-if="is_first_invoice_server_paid">This action cannot be reversed. If you confirm, your Subscription will be upgraded </p>
+                                <p t-else="">You must pay the full bill of the old package before upgrading </p>
+
+                                <!-- <div class="form-group">
+                                    <p>Notes:</p>
+                                    <input class="form-control" name="closing_text" style="width: 100%;" rows="4"></input>
+                                </div> -->
+                            </main>
+                            <footer class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-primary upgrade-submit" t-if="is_first_invoice_server_paid">Confirm</button>
+                                <button class="btn btn-primary upgrade-submit" t-else="">Pay the bill</button>
+                            </footer>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- UPGRADE-MODAL -->
+            <div role="dialog" class="modal fade" id="wc-modal-activate-package" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <header class="modal-header">
+                            <h4 class="modal-title">Activate</h4>
+                        </header>
+                        <form method="post" t-attf-action="/my/subscription/#{account.id}/activate/?uuid=#{account.uuid}">
+                            <input class="d-none" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <!-- <input class="d-none" name="package_id"/> -->
+                            <main class="modal-body">
+                                <p>Pay the full bill to <strong>Activate</strong> this package</p>                               
+                            </main>
+                            <footer class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>                              
+                                <button class="btn btn-primary upgrade-submit">Pay the bill</button>
+                            </footer>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESTART SERVER-MODAL-->
+            <div role="dialog" class="modal fade" id="wc-modal-restart-server" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <header class="modal-header">
+                            <h4 class="modal-title">Restart Server</h4>
+                        </header>
+                        <form method="post">
+                            <input class="d-none" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <main class="modal-body">
+                                <p>If you confirm, your Server will be restart</p>
+                            </main>
+                            <footer class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-primary">Restart</button>
+                            </footer>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHANGE DOMAIN-MODAL -->
+            <div role="dialog" class="modal fade" id="wc-modal-change-domain" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <header class="modal-header">
+                            <h4 t-if="account.domain" class="modal-title">Change Domain</h4>
+                            <h4 t-else="" class="modal-title">Set Domain</h4>
+                        </header>
+                        <form method="post" t-attf-action="/my/subscription/#{account.id}/change-domain/?uuid=#{account.uuid}">
+                            <input class="d-none" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <main class="modal-body">
+                                <p>If you confirm, your Domain will be change</p>
+                                <div class="form-group">
+                                    <p>New Domain:</p>
+                                    <!-- <textarea class="form-control" name="domain" style="width: 100%;" rows="4"></textarea> -->
+                                    <input class="form-control" name="domain" style="width: 100%;" rows="4" t-att-value='account.domain'></input>
+                                </div>
+                            </main>
+                            <footer class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-primary">Confirm</button>
+                            </footer>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHANGE DEPENDENCIES-MODAL -->
+            <div role="dialog" class="modal fade" id="wc-modal-change-dependencies" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <header class="modal-header">
+                            <h4 t-if="account.dependencies != ' ' and account.dependencies != ''" class="modal-title">Change Dependecies</h4>
+                            <h4 t-else="" class="modal-title">Set Dependecies</h4>
+                        </header>
+                        <form method="post" t-attf-action="/my/subscription/#{account.id}/change-dependencies/?uuid=#{account.uuid}">
+                            <input class="d-none" name="csrf_token" t-att-value="request.csrf_token()"/>
+                           
+                            <main class="modal-body">
+                                <p>If you confirm, your Dependencies will be change</p>
+                                <div class="form-group">
+                                    <p>New Dependencies:</p>
+                                    <textarea class="form-control" name="dependencies" style="width: 100%;" rows="4" t-esc='account.dependencies'></textarea>
+                                </div>
+                            </main>
+                            <footer class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-primary upgrade-submit">Confirm</button>
+                            </footer>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHANGE ADDONS REPO-MODAL -->
+            <div role="dialog" class="modal fade" id="wc-modal-change-addons-repo" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <header class="modal-header">
+                            <h4 t-if="account.addons_repo" class="modal-title">Change Addons Repo</h4>
+                            <h4 t-else="" class="modal-title">Set Addons Repo</h4>
+                        </header>
+                        <form method="post" t-attf-action="/my/subscription/#{account.id}/change-addons-repo/?uuid=#{account.uuid}">
+                            <input class="d-none" name="csrf_token" t-att-value="request.csrf_token()"/>
+                           
+                            <main class="modal-body">
+                                <p>If you confirm, your Addons Repo will be change</p>
+                                <div class="form-group">
+                                    <p>New Addons Repo:</p>
+                                    <input class="form-control" name="addons_repo" style="width: 100%;" rows="4" t-att-value='account.addons_repo' placeholder="https://gitlab.com/vua_he_thong/demo/demo"></input>
+                                </div>
+                            </main>
+                            <footer class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-primary upgrade-submit">Confirm</button>
+                            </footer>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        
+        <xpath expr="//ul[hasclass('list-group')]" position="inside">
+            <t t-if="account.domain">
+                <li t-if="is_show_carousel" class="list-group-item flex-grow-1">
+                    <a t-if="account.domain" class="mt8 btn btn-secondary goto_domain" t-att-title="account.domain" role="button" t-att-href="'//' + account.domain">Goto: <span t-esc='account.domain'/></a> 
+                    <!-- <a t-if="account.domain" class="mt8 btn btn-secondary" style="max-width: 170px; word-wrap:break-word;" role="button" t-att-href="'//' + account.domain">Goto: Your Domain</a>  -->
+                    <!-- <br />
+                    <p t-if="account.domain" t-esc="account.domain" class="badge badge-primary" style="width:200px; word-wrap:break-word;"></p> -->                                       
+                </li>
+            </t>        
+            
+            <t t-if="account.domain and is_stage_running">
+                <li t-if="is_show_carousel" class="list-group-item flex-grow-1">
+                    <a t-if="account.domain" class="mt8 btn btn-secondary" role="button" data-toggle="modal" data-target="#wc-modal-restart-server" href="#">Restart Server</a>                         
+                </li>
+            </t>        
+
+            <li t-if="is_show_carousel" class="list-group-item flex-grow-1">
+                <a t-if="account.domain" role="button" data-toggle="modal" data-target="#wc-modal-change-domain" href="#">Change Domain</a>
+                <a t-else="" role="button" data-toggle="modal" data-target="#wc-modal-change-domain" href="#">Set Domain</a>
+            </li>  
+            
+            <li t-if="is_show_carousel" class="list-group-item flex-grow-1">
+                <a t-if="account.addons_repo" role="button" data-toggle="modal" data-target="#wc-modal-change-addons-repo" href="#">Change Addons Repo</a> 
+                <a t-else="" role="button" data-toggle="modal" data-target="#wc-modal-change-addons-repo" href="#">Set Addons Repo</a> 
+            </li>
+
+            <li t-if="is_show_carousel" class="list-group-item flex-grow-1">
+                <a t-if="account.dependencies != ' ' and account.dependencies != ''" role="button" data-toggle="modal" data-target="#wc-modal-change-dependencies" href="#">Change Dependencies</a> 
+                <a t-else="" role="button" data-toggle="modal" data-target="#wc-modal-change-dependencies" href="#">Set Dependencies</a> 
+            </li>   
+        </xpath>
+    </template>
+
+</odoo>

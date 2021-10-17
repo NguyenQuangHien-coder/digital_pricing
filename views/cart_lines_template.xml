@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- CUSTOM CART_LINE -->
+    <template id="cart_lines" inherit_id="website_sale.cart_lines" name="Cart Lines">
+        <xpath expr="//div[hasclass('css_quantity')]" position="replace">           
+            <!-- Cart_Line of server product -->
+            <div t-if="line.product_id.product_tmpl_id.is_value_package or line.product_id.product_tmpl_id.categ_id.is_digital_category" class="css_quantity input-group mx-auto">
+                <input type="text" readonly="1" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
+            </div>  
+            <!-- Cart_Line of normal product -->
+            <div t-else="" class="css_quantity input-group mx-auto">
+                <div class="input-group-prepend">
+                    <a t-attf-href="#" class="btn btn-link js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
+                        <i class="fa fa-minus"></i>
+                    </a>
+                </div>
+                <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
+                <div class="input-group-append">
+                    <a t-attf-href="#" class="btn btn-link float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                </div>
+            </div>      
+        </xpath>       
+    </template>
+
+    <!-- CALL CUSTOM CART_LINE TO REPLACE DEFAULT TEMPLATE -->
+    <template id="cart" name="Shopping Cart" inherit_id='website_sale.cart'>
+        <xpath expr="//t[@t-call='website_sale.cart_lines']" position="replace">           
+            <t t-call="license_management.cart_lines"/>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="10"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Subscriptions" string="Subscriptions" data-key="sale_subscription">
+                    <h2>Default Payment Term and First Invoice Percent</h2>
+                    <div class="row mt16 o_settings_container" name="catalog_setting_container">                      
+                        <div class="col-12 col-lg-6 o_setting_box" id="quotation_validity_days">
+                            <div class="o_setting_right_pane">
+                                <!-- <label for="use_quotation_validity_days"/>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/> -->
+                                <div class="text-muted">
+                                    Set a default Trial invoice percent and default Payment Term
+                                </div>                              
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <span class="col-lg-3">First invoice percent: <field name="first_invoice_percent" /> %</span>
+                                    </div>
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <span class="col-lg-3">Default Payment Term: <field name="server_payment_term_id" widget="selection" /> </span>
+                                    </div>
+                                </div>
+                                <!-- <div class="content-group">
+                                    <div class="mt16">
+                                        <span class="col-lg-3">Default Section Label: <field name="section_label" /></span>
+                                    </div>
+                                </div> -->
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <span class="col-lg-3">Default Section Label: <field name="section_label" /></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <h2>Config Default Section Label (Website)</h2>
+                    <div class="row mt16 o_settings_container" name="catalog_setting_container">                      
+                        <div class="col-12 col-lg-6 o_setting_box" id="quotation_validity_days">
+                            <div class="o_setting_right_pane">
+                                <div class="text-muted">
+                                    Label non-server and digital products
+                                </div>                              
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <span class="col-lg-3">Default Section Label: <field name="default_section_label" /></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_datetemplate_config_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="res_config_settings_view_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'license_management', 'bin_size': False}</field>
+    </record>
+
+    <!-- ADD MENU ITEM -->
+    <menuitem id="menu_sale_general_settings"
+        name="Settings"
+        parent="sale_subscription.menu_sale_subscription_config"
+        sequence="0"
+        action="action_datetemplate_config_settings"
+        groups="base.group_system"/>
+
+</odoo>

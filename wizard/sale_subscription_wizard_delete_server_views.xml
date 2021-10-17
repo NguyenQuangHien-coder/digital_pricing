@@ -1,0 +1,51 @@
+<!-- DELETE SERVER -->
+<odoo>
+    <record id="delete_server_form" model="ir.ui.view">
+        <field name="name">delete.server.wizard</field>
+        <field name="model">sale.subscription.wizard.delete.server</field>
+        <field name="arch" type="xml">
+        <form string="Delete Server">
+            <group>
+                <div class="row">
+                    <div class="col-12">
+                        <label for="namespace_validate" class="text-danger"/>:  
+                        <span class="text-danger"><field name="subject" placeholder="Subject..." readonly="1" class="text-danger font-weight-bold"/>. All data will be lost and cannot recovered. Are you ABSOLUTELY sure?</span>               
+                    </div>
+                </div>
+            </group>
+            <group>
+                <div class="row">
+                    <div class="col-12">
+                        <p>This action can lead to data loss. To prevent accidental actions we ask you to confirm your intention.</p>
+                        <span>Please type <field name="subject" placeholder="Subject..." readonly="1" class="text-danger font-weight-bold"/> to proceed or close this modal to cancel.</span>
+                    </div>
+                   </div>
+            </group>
+            <group>
+                <div class="row">
+                    <div class="col-4">      
+                    </div>
+                    <div class="col-4">
+                        <field name="namespace_validate" nolabel="1" class="text-center"/>               
+                    </div>
+                    <div class="col-4">            
+                    </div>
+                </div>
+            </group>
+            <footer>
+                <button name="delete_server" string="Delete" type="object" class="btn-primary"/>
+                <button string="Cancel" class="btn-secondary" special="cancel"/>
+            </footer>
+        </form>
+        </field>
+    </record>
+
+    <record id="delete_server_wizard" model="ir.actions.act_window">
+        <field name="name">Confirmation Required</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.subscription.wizard.delete.server</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="delete_server_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_record_sidebar" name="My Portal Record Sidebar" inherit_id="portal.portal_record_sidebar">
+        <!-- CHANGE LOGO -->
+        <xpath expr="//div[hasclass('card-footer')]" position="replace">           
+            <div class="card-footer small text-center text-muted border-top-0 pt-1 pb-1 d-none d-lg-block">
+                Powered by <a target="_blank" href="https://vuahethong.net/" title="vuahethong"><img src="https://vuahethong.net/web/image/website/1/logo/vuahethong.net?unique=52a2100" alt="Odoo Logo" height="15"/></a>
+            </div>
+        </xpath>       
+    </template>
+</odoo>

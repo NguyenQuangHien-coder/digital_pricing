@@ -1,0 +1,83 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="sale_subscription_view_form" model="ir.ui.view">
+        <field name="name">sale.subscription.form.view</field>
+        <field name="model">sale.subscription</field>
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <field name="show_license_panel" invisible="1"/>
+                <page string="License Details" id="license" attrs="{'invisible': [('show_license_panel', '=', False)]}">                  
+                        <header>                          
+                            <button string="Create" class="btn btn-success mx-1" name="button_create_server" type="object" attrs="{'invisible':['|',('license_state', '==', 'running'),('license_state', '==', 'closed')]}" />
+                            <button string="Redeploy" class="btn btn-success mx-1" name="%(license_management.redeploy_server_wizard)d" type="action" attrs="{'invisible': ['|',('license_state', '==', 'pending'),('license_state', '==', 'deleted')]}" />
+                            <!-- <button string="Start" class="btn btn-info mx-1" name="button_start_server" type="object" attrs="{'invisible':['|',('license_state', '==', 'running'),('license_state', '==', 'deleted'),('license_state', '==', 'pending')]}"/> -->
+                            <button string="Start" class="btn btn-info mx-1" name="button_start_server" type="object" attrs="{'invisible':[('license_state', '!=', 'closed')]}"/>
+                            <button string="Stop" class="btn btn-warning mx-1" name="button_stop_server" type="object" attrs="{'invisible':[('license_state', '!=', 'running')]}"/>
+                            <button string="Delete" class="btn btn-danger mx-1" name="%(license_management.delete_server_wizard)d" type="action" attrs="{'invisible': ['|',('license_state', '==', 'deleted'),('license_state', '==', 'pending')]}"/>           
+                            <field name="license_state" widget="statusbar" statusbar_visible="pending,running,closed,deleted"/>
+                            <!-- <button name="go_to_website" type="object" string="Goto Website" class="oe_highlight"/>      -->
+                        </header>                                                    
+                   <group>
+                        <group>
+                            <field name="hidden_state" widget="badge"/>
+                            <field name="partner_id" string="User"/>                                               
+                            <field name="license_key"/>
+                            <field name="uuid"/>
+                            <field name="domain" widget="url" />
+                            <field name="addons_repo" widget="url" />
+                            <field name="dependencies"/>
+                        </group>         
+                        <group>
+                            <!-- test -->
+                            <field name="is_trial_version" invisible="1"/>
+                            <!-- end-test -->
+                            <field name="namespace" string="Namespace" />
+                            <field name="config"/>                         
+                        </group>    
+                        <group>
+                            <div>
+                                <field name="is_extend" nolabel="1"/>
+                                <label for="is_extend" string="Force Extend Date"/>
+                            </div>
+                            <div class="d-flex" attrs="{'invisible': [('is_extend', '!=', True)]}">
+                                <field name="extend_date_by_calendar" force_save="1"
+                                       placeholder="Force Extend Date by Calendar"/>
+                                <!-- <span class="o_form_label mx-3 oe_edit_only"
+                                      attrs="{'invisible': [('extend_date', '!=', False)]}"> or </span>
+                                <field name="extend_date"
+                                       placeholder="Force Extend Date"/> -->
+                            </div>
+                            <!-- <field name="extend_days" widget="selection" nolabel = "1" attrs="{'invisible': [('is_extend', '!=', True)]}"/> -->
+                            <!-- <field name="show_extend_days"/> -->
+                        </group>   
+                    </group>       
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='date_start']" position="after">         
+                <!-- = true when first invoice of server is paid or partial         -->
+                <field name="is_first_invoice_server_payment" invisible="1"/>               
+                <label for="end_trial_date" attrs="{'invisible': [('is_trial_version', '!=', True)]}"/>
+                <div attrs="{'invisible': [('is_trial_version', '!=', True)]}">
+                    <!-- end trial date and goto first server invoice -->
+                    <field name="end_trial_date" readonly="0"/>
+                    <button string="Goto Invoice" class="oe_link" name="return_first_invoice_server" type="object" icon="fa-long-arrow-right"/>
+                    <span><field name="first_invoice_server_status" class="badge badge-success" /></span>           
+                </div>                          
+            </xpath>
+        </field>
+    </record>
+
+    <!-- <record id="sale_subscription_template_view_form" model="ir.ui.view">
+        <field name="name">sale.subscription.form.view</field>
+        <field name="model">sale.subscription.template</field>
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_template_view_form" />
+        <field name="arch" type="xml">
+            
+            <xpath expr="//field[@name='user_closable']" position="after">     
+                <field name="show_trial_date" invisible="1"/>             
+                <field name="is_trial_version" attrs="{'invisible': [('show_trial_date', '!=', True)]}"/>      
+            </xpath>
+        </field>
+    </record> -->
+</odoo>

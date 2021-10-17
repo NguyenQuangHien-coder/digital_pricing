@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+       
+        <!-- <record id="seq_product_variant" model="ir.sequence">
+            <field name="name">Product Variant Sequence</field>
+            <field name="code">product.product.sequence</field>
+            <field name="company_id" eval="False"/>
+        </record> -->
+
+
+    </data>
+    <!-- <data>
+        <record id="seq_digital_package_value" model="ir.sequence">
+            <field name="name">Digital Package Sequence</field>
+            <field name="code">product.digitalpackage.value</field>
+            <field name="padding">8</field>
+            <field name="number_next">50</field> 
+            <field name="prefix">XX</field> 
+            <field name="number_increment">1</field> 
+           
+        </record>
+    </data> -->
+</odoo>

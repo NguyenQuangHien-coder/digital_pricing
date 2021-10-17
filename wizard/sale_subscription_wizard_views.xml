@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record model="ir.ui.view" id="wizard_form_view">
+        <field name="name">wizard.form</field>
+        <field name="model">sale.subscription.wizard</field>
+        <field name="inherit_id" ref="sale_subscription.wizard_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="replace">
+                <!-- <attribute name='domain'>[('recurring_invoice', '=', True)]</attribute> -->
+                <!-- <attribute name='domain'>[('product_tmp_id', '=', 32)]</attribute> -->
+                <!-- <field name="product_id" filter_domain="['|', ('recurring_invoice', '=', True), ('product_tmpl_id.id', '=', 33)]" context="{'default_recurring_invoice': True}"/> -->
+                <field name="product_id" context="{'default_recurring_invoice': True}"/>
+                
+            </xpath>
+        </field>
+    </record>
+</odoo>

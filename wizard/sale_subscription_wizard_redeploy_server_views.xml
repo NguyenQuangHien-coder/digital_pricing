@@ -1,0 +1,25 @@
+<!-- DELETE SERVER -->
+<odoo>
+    <record id="redeploy_server_form" model="ir.ui.view">
+        <field name="name">redeploy.server.wizard</field>
+        <field name="model">sale.subscription.wizard.redeploy.server</field>
+        <field name="arch" type="xml">
+        <form string="Redeploy Server">
+            <span>Confirm to <span class="font-weight-bold">Redeploy</span> server!</span>
+            <footer>
+                <button name="redeploy_server" string="Redeploy" type="object" class="btn-primary"/>
+                <button string="Cancel" class="btn-secondary" special="cancel"/>
+            </footer>
+        </form>
+        </field>
+    </record>
+
+    <record id="redeploy_server_wizard" model="ir.actions.act_window">
+        <field name="name">Confirmation Required</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.subscription.wizard.redeploy.server</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="redeploy_server_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

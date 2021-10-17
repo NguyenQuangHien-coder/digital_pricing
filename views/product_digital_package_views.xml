@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="digitalpackage_tree_view" model="ir.ui.view">
+        <field name="name">product.digitalpackage.tree</field>
+        <field name="model">product.digitalpackage</field>
+        <field name="arch" type="xml">
+            <tree string="Variant Values">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <!-- <field name="display_type"/>
+                <field name="create_variant"/> -->
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_digitalpackage_view_form" model="ir.ui.view">
+        <field name="name">product.digitalpackage.form</field>
+        <field name="model">product.digitalpackage</field>
+        <field name="arch" type="xml">
+            <form string="Product Digital Package">
+            <!-- <field name="is_used_on_products" invisible="1"/> -->
+            <sheet>
+                <group name="main_fields" class="o_label_nowrap">
+                    <label for="name" string="Digital Package Name"/>
+                    <field name="name" nolabel="1"/>
+                    <!-- <field name="display_type" widget="radio"/>
+                    <field name="create_variant" widget="radio" attrs="{'readonly': [('is_used_on_products', '=', True)]}"/> -->
+                    <field name="is_server"/>
+                </group>
+                <notebook>
+                    <page string="Digital Package Values" name="digitalpackage_values">
+                        <field name="value_ids" widget="one2many" nolabel="1">
+                            <tree string="Values" editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <!-- <field name="display_type" invisible="1"/>
+                                <field name="is_custom" groups="product.group_product_variant"/>
+                                <field name="html_color" attrs="{'column_invisible': [('parent.display_type', '!=', 'color')]}" widget="color"/> -->
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="digitalpackage_action" model="ir.actions.act_window">
+        <field name="name">Digital Package</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.digitalpackage</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- <record id="product_attribute_value_action" model="ir.actions.act_window">
+        <field name="name">Product Variant Values</field>
+        <field name="res_model">product.template.attribute.value</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('product_tmpl_id', '=', active_id)]</field>
+        <field name="view_ids"
+                eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('product.product_template_attribute_value_view_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('product.product_template_attribute_value_view_form')})]" />
+        <field name="context">{
+            'default_product_tmpl_id': active_id,
+            'search_default_active': 1,
+        }</field>
+    </record> -->
+
+    <!-- ADD MENU ITEM -->
+    <menuitem id="menu_product_digitalpackage"
+        name="Digital Package"
+        parent="stock.menu_product_in_config_stock"
+        sequence="3"
+        action="digitalpackage_action"
+        groups="base.group_system"/>
+
+</odoo>

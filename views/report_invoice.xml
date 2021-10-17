@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//tr[hasclass('o_total')]" position="before">     
+            <tr>
+                <td>Old package amount left</td>
+                <td class="text-right">
+                    <span class="text-nowrap" t-field="o.package_amount_left"/>
+                </td>
+            </tr>      
+        </xpath>
+
+    </template> -->
+</odoo>
